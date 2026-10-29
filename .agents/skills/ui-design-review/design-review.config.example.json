@@ -1,0 +1,23 @@
+{
+  "baseUrl": "http://localhost:5173",
+  "pages": [
+    { "name": "dashboard", "path": "/dashboard", "waitFor": "main" },
+    {
+      "name": "orders",
+      "path": "/orders",
+      "waitFor": "table",
+      "states": [
+        { "name": "new-order-dialog", "actions": [{ "click": "button:has-text('New order')" }, { "waitFor": "[role=dialog]" }] },
+        { "name": "validation-errors", "actions": [{ "click": "button:has-text('New order')" }, { "click": "[role=dialog] button[type=submit]" }] },
+        { "name": "empty-search", "actions": [{ "fill": ["input[type=search]", "zzzz-no-match"] }, { "wait": 500 }] }
+      ]
+    },
+    { "name": "button-story", "url": "http://localhost:6006/iframe.html?id=components-button--primary&viewMode=story" }
+  ],
+  "viewports": ["mobile", "tablet", "desktop"],
+  "themes": ["light", "dark"],
+  "themeSetup": { "dark": { "attr": ["data-theme", "dark"] } },
+  "auth": { "storageState": ".design-review/auth.json" },
+  "ignoreSelectors": ["#third-party-chat-widget"],
+  "maxTabs": 40
+}

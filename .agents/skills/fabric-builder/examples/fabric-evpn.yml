@@ -1,0 +1,22 @@
+# EVPN/VXLAN leaf-spine on SR Linux: 2 spines (overlay RRs), 4 leaves,
+# eBGP underlay + iBGP EVPN overlay, one L2 service + one L3 tenant.
+kind: srl-evpn-fabric
+name: dc1
+spines: 2
+leaves: 4
+services:
+  - type: mac-vrf
+    name: vlan10
+    vlan: 10
+    access_port: ethernet-1/10
+    leaves: all
+  - type: mac-vrf
+    name: vlan20
+    vlan: 20
+    access_port: ethernet-1/10
+    leaves: [leaf1, leaf2]
+  - type: ip-vrf
+    name: tenant1
+    attach: [vlan10, vlan20]
+    gw: [172.16.10.1/24, 172.16.20.1/24]
+    leaves: all

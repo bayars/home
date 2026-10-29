@@ -1,0 +1,16 @@
+# Matches the live clab-srl-gw-test lab: 2 SRL leaves back-to-back on
+# ethernet-1/1 (no spines). eBGP underlay on the /31, iBGP EVPN between
+# loopbacks (overlay ASN via local-as), one mac-vrf with VNI 10010.
+# Used by the E2E verification recipe against clab-srl-gw-test-srl1/-srl2.
+kind: srl-evpn-fabric
+name: srl-gw-test
+spines: 0
+leaves: 2
+links:
+  - [leaf1:ethernet-1/1, leaf2:ethernet-1/1]
+services:
+  - type: mac-vrf
+    name: vlan10
+    vlan: 10
+    access_port: ethernet-1/10
+    leaves: all

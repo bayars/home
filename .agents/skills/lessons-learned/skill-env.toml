@@ -1,0 +1,12 @@
+runtime = "uv"
+python = ">=3.11"
+
+[entrypoints]
+lint = "scripts/lint_skill.py"
+ledger = "scripts/ledger.py"
+signal_capture = "scripts/hooks/signal_capture.py"
+stop_review = "scripts/hooks/stop_review.py"
+
+[smoke]
+signal_capture = "--self-test"
+stop_review = "--self-test"

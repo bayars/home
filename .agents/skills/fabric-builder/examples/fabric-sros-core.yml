@@ -1,0 +1,26 @@
+# SR OS PE/core: 2 PEs + 1 P (iBGP RR), ISIS + LDP, one VPRN, one
+# EVPN-MPLS VPLS, one cross-PE epipe (spoke-SDP).
+kind: sros-core
+name: core1
+pes: 2
+ps: 1
+igp: isis
+mpls: ldp
+services:
+  - type: vprn
+    id: 100
+    customer: 1
+    sites:
+      - {node: pe1, port: 1/1/10, ip: 172.16.0.1/24}
+      - {node: pe2, port: 1/1/10, ip: 172.16.1.1/24}
+  - type: vpls
+    id: 200
+    evpn: true
+    sites:
+      - {node: pe1, port: 1/1/11}
+      - {node: pe2, port: 1/1/11}
+  - type: epipe
+    id: 300
+    sites:
+      - {node: pe1, port: 1/1/12}
+      - {node: pe2, port: 1/1/12}

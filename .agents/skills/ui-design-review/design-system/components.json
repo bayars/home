@@ -1,0 +1,24 @@
+{
+  "_template": true,
+  "_readme": "Describe your corporate component library, then DELETE the \"_template\" line. While it is present, component checks are skipped.",
+  "package": "@your-company/ui",
+  "rawElementReplacements": {
+    "button": "<Button>",
+    "input": "<TextField> / <Checkbox> / <Radio>",
+    "select": "<Select>",
+    "textarea": "<TextArea>",
+    "table": "<DataTable>",
+    "dialog": "<Modal>",
+    "a": "<Link>"
+  },
+  "bannedImports": [
+    { "name": "@mui/material", "reason": "not the corporate library" },
+    { "name": "antd", "reason": "not the corporate library" },
+    { "name": "react-bootstrap", "reason": "not the corporate library" }
+  ],
+  "deprecated": {
+    "OldButton": "<Button variant=\"secondary\">"
+  },
+  "tokenFiles": ["**/tokens/**", "**/theme/**", "**/*.tokens.*", "**/tailwind.config.*"],
+  "designSystemSourceGlobs": ["packages/ui/**"]
+}

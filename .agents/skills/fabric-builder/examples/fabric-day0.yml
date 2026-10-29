@@ -1,0 +1,20 @@
+# Day-0 base configs only: hostname/location, loopback, enabled interfaces,
+# protocol skeleton. Mixed platforms.
+kind: base-day0
+name: base1
+nodes:
+  - name: srl1
+    platform: srlinux
+    interfaces: [ethernet-1/1]
+    protocol_skeleton: bgp
+    asn: 65001
+  - name: srl2
+    platform: srlinux
+    interfaces: [ethernet-1/1]
+    protocol_skeleton: isis
+  - name: pe1
+    platform: sros
+    interfaces: ["1/1/1"]
+    protocol_skeleton: ospf
+links:
+  - [srl1:ethernet-1/1, srl2:ethernet-1/1]

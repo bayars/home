@@ -1,0 +1,19 @@
+---
+description: Run the ui-design-review skill on any React UI you create or change before reporting the work as done
+globs: **/*.tsx,**/*.jsx,**/*.css,**/*.scss
+alwaysApply: false
+---
+
+When you create or modify user-facing React UI (components, pages, layouts,
+styles), you are not finished when the code compiles. Before reporting the
+work as done:
+
+1. Use the `ui-design-review` skill: capture the affected view(s) with
+   Playwright, run the source scan, and look at the screenshots.
+2. Fix critical and major findings, using the corporate components and tokens
+   described in `.cursor/skills/ui-design-review/design-system/`.
+3. Re-capture to confirm, and include the before → after counts plus anything
+   left for a human decision in your summary.
+
+Skip this only for changes with no visual or interaction effect (types, tests,
+data plumbing), and say that you skipped it.
