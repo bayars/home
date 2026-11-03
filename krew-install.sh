@@ -75,6 +75,12 @@ kubectl krew update
 kubectl krew install "${PLUGINS[@]}" || true   # don't abort if one plugin fails
 kubectl krew upgrade || true
 
+# --- kubectl-aliases (sourced by .bashrc) ---
+# https://github.com/ahmetb/kubectl-aliases
+curl -fsSL https://raw.githubusercontent.com/ahmetb/kubectl-aliases/master/.kubectl_aliases \
+  -o "$HOME/.kubectl_aliases"
+echo "Downloaded ~/.kubectl_aliases"
+
 echo
 kubectl krew list
 echo "Done. Restart your shell (or: source ~/.bashrc) to pick up PATH."

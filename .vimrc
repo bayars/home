@@ -28,9 +28,20 @@ set smartcase                   " Unless uppercase present
 set incsearch                   " Highlight as you type
 set hlsearch                    " Highlight matches
 
-set clipboard=unnamedplus        " Use system clipboard
+" System clipboard: 'unnamed' (*) is the clipboard on macOS,
+" 'unnamedplus' (+) on Linux/X11. Listing both works on either.
+set clipboard^=unnamed,unnamedplus
 set mouse=a                      " Mouse enabled everywhere
 set ttymouse=sgr                 " Better mouse support
+
+" Bracketed paste inside tmux (Vim only enables it automatically
+" for xterm-like $TERM). Keeps pasted text from being auto-indented.
+if &term =~# '^screen\|^tmux'
+  let &t_BE = "\e[?2004h"
+  let &t_BD = "\e[?2004l"
+  exec "set t_PS=\e[200~"
+  exec "set t_PE=\e[201~"
+endif
 
 set splitbelow splitright         " New splits open more naturally
 set complete+=.,w,b,u,t
