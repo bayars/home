@@ -102,6 +102,7 @@ Plug 'plasticboy/vim-markdown'
 " Utilities
 Plug 'tpope/vim-eunuch'          " :Rename, :Delete, etc.
 Plug 'diepm/vim-rest-console'    " Test REST APIs from Vim
+Plug 'christoomey/vim-tmux-navigator' " C-h/j/k/l across Vim splits and tmux panes
 
 call plug#end()
 
@@ -134,13 +135,26 @@ let g:ale_linters = {
 \   'go': ['gopls'],
 \   'javascript': ['eslint'],
 \   'sh': ['shellcheck'],
+\   'yaml': ['yamllint', 'yaml-language-server'],
+\   'dockerfile': ['hadolint'],
+\   'terraform': ['tflint'],
 \}
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \   'python': ['black'],
 \   'go': ['gofmt'],
 \   'javascript': ['prettier'],
+\   'sh': ['shfmt'],
+\   'terraform': ['terraform'],
 \}
+" shfmt: 2-space indent, indent switch cases (matches this config's style)
+let g:ale_sh_shfmt_options = '-i 2 -ci'
+" Validate YAML against the Kubernetes schema (yaml-language-server).
+" Other well-known files (docker-compose, GitHub Actions, ...) are matched
+" automatically via SchemaStore.
+let g:ale_yaml_ls_config = {'yaml': {'schemas': {'kubernetes': '/*.{yaml,yml}'}}}
+" Ansible files aren't Kubernetes manifests: only run yamllint on them
+autocmd FileType yaml.ansible let b:ale_linters = {'yaml': ['yamllint']}
 nnoremap <leader>af :ALEFix<CR>
 nnoremap <leader>an :ALENext<CR>
 nnoremap <leader>ap :ALEPrevious<CR>
@@ -175,8 +189,10 @@ nnoremap <leader>x :x<CR>
 nnoremap <leader>sv :source $MYVIMRC<CR>
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
 
-" Move between splits easier
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
+" Move between splits: C-h/j/k/l is provided by vim-tmux-navigator
+" (also moves into neighbouring tmux panes)
+
+" YAML (Kubernetes / Helm values): fold by indent (za to toggle),
+" all folds open by default, column guide to check indentation depth
+autocmd FileType yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2
+      \ foldmethod=indent foldlevel=99 cursorcolumn
