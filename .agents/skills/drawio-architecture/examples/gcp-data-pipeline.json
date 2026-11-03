@@ -1,0 +1,36 @@
+{
+  "title": "Clickstream analytics on Google Cloud",
+  "description": "Clickstream analytics pipeline in one Google Cloud project, drawn as three stages. Ingest: web and mobile apps send events through Cloud Load Balancing to a Cloud Run collector, which publishes them to Pub/Sub. Process: Dataflow reads the stream, groups events into sessions and enriches them through a Cloud Function. Store and serve: raw events are archived to Cloud Storage, sessions are loaded into BigQuery and user profiles are kept in Bigtable. Analysts read the results through dashboards on BigQuery.",
+  "direction": "right",
+  "groups": [
+    { "id": "proj", "label": "Project: analytics-prod", "kind": "gcp.project" },
+    { "id": "ingest", "label": "Ingest", "kind": "gcp.zone", "parent": "proj", "parallel": false },
+    { "id": "process", "label": "Process", "kind": "gcp.vpc", "parent": "proj" },
+    { "id": "serve", "label": "Store and serve", "kind": "gcp.subnet", "parent": "proj" }
+  ],
+  "nodes": [
+    { "id": "web", "label": "Web and mobile apps", "kind": "client" },
+    { "id": "lb", "label": "Cloud Load Balancing", "icon": "gcp.load_balancer", "parent": "ingest" },
+    { "id": "run", "label": "Cloud Run: collector", "icon": "gcp.cloud_run", "parent": "ingest" },
+    { "id": "pubsub", "label": "Pub/Sub: events", "icon": "gcp.pubsub", "parent": "ingest" },
+    { "id": "dataflow", "label": "Dataflow: sessionise", "icon": "gcp.dataflow", "parent": "process" },
+    { "id": "fn", "label": "Cloud Functions: enrich", "icon": "gcp.functions", "parent": "process" },
+    { "id": "gcs", "label": "Cloud Storage: raw", "icon": "gcp.gcs", "parent": "serve" },
+    { "id": "bq", "label": "BigQuery", "icon": "gcp.bigquery", "parent": "serve" },
+    { "id": "bt", "label": "Bigtable: profiles", "icon": "gcp.bigtable", "parent": "serve" },
+    { "id": "bi", "label": "Dashboards", "kind": "external" },
+    { "id": "analysts", "label": "Analysts", "kind": "actor" }
+  ],
+  "edges": [
+    { "from": "web", "to": "lb", "label": "events" },
+    { "from": "lb", "to": "run" },
+    { "from": "run", "to": "pubsub", "label": "publish" },
+    { "from": "pubsub", "to": "dataflow", "label": "stream" },
+    { "from": "pubsub", "to": "gcs", "label": "archive", "dashed": true },
+    { "from": "dataflow", "to": "fn", "label": "lookup" },
+    { "from": "dataflow", "to": "bq", "label": "load" },
+    { "from": "dataflow", "to": "bt", "label": "upsert" },
+    { "from": "bq", "to": "bi", "label": "SQL" },
+    { "from": "analysts", "to": "bi", "arrow": "none" }
+  ]
+}

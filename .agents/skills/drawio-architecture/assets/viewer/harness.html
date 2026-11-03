@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>drawio-architecture check page</title>
+<!--
+  Renders one .drawio file with the official draw.io viewer, served entirely
+  from 127.0.0.1 by scripts/lib/server.mjs. Nothing on this page may load from
+  another host: the server sends a Content-Security-Policy that forbids it.
+-->
+<style>
+  html, body { margin: 0; background: #ffffff; }
+  #stage { padding: 20px; width: 30000px; }
+  #stage .mxgraph { width: 29900px; }
+  #message { font: 14px sans-serif; padding: 20px; color: #333; }
+</style>
+<script>
+  // Point the viewer at this server instead of draw.io's own hosts.
+  window.STENCIL_PATH = "stencils";
+  window.SHAPES_PATH = "shapes";
+  window.STYLE_PATH = "styles";
+  window.GRAPH_IMAGE_PATH = "img";
+  window.mxImageBasePath = "mxgraph/images";
+  window.mxBasePath = "mxgraph/";
+  window.mxLoadStylesheets = false;
+  window.mxLoadResources = false;
+  window.DRAWIO_BASE_URL = location.origin;
+  window.DRAWIO_VIEWER_URL = location.origin + "/js/viewer-static.min.js";
+  window.DRAWIO_LIGHTBOX_URL = location.origin;
+  window.PROXY_URL = location.origin + "/blocked-proxy";
+  // Anything the page tried to load from elsewhere is recorded here and reported as a finding.
+  window.__blocked = [];
+  document.addEventListener("securitypolicyviolation", function (e) { window.__blocked.push(String(e.blockedURI || "")); });
+</script>
+</head>
+<body>
+<div id="message"></div>
+<div id="stage"></div>
+<script src="js/viewer-static.min.js"></script>
+<script src="inspect.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+# Test fixture for evals/evals.json. Every credential and host name in this file is made up.
+services:
+  proxy:
+    image: traefik:v3.1
+    ports: ["443:443"]
+    networks: [edge]
+    depends_on: [web, api]
+  web:
+    image: registry.example.com/shop/web:2.14
+    networks: [edge]
+    environment:
+      API_URL: http://api:8080
+  api:
+    image: registry.example.com/shop/api:2.14
+    networks: [edge, backend]
+    depends_on: [db, cache, broker]
+    environment:
+      DATABASE_URL: postgres://shop:S3cr3t-pg-pass@db:5432/shop
+      REDIS_URL: redis://cache:6379/0
+      AMQP_URL: amqp://shop:rabbit-pass-91@broker:5672
+      SEARCH_URL: http://search:9200
+  worker:
+    image: registry.example.com/shop/worker:2.14
+    networks: [backend]
+    depends_on: [broker, db]
+    environment:
+      DATABASE_URL: postgres://shop:S3cr3t-pg-pass@db:5432/shop
+      AMQP_URL: amqp://shop:rabbit-pass-91@broker:5672
+      SMTP_HOST: smtp.mailprovider.example
+      SMTP_PASSWORD: mail-api-key-7f3a
+  db:
+    image: postgres:16
+    networks: [backend]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    environment:
+      POSTGRES_PASSWORD: S3cr3t-pg-pass
+  cache:
+    image: redis:7
+    networks: [backend]
+  broker:
+    image: rabbitmq:3.13-management
+    networks: [backend]
+  search:
+    image: opensearchproject/opensearch:2.15.0
+    networks: [backend]
+    volumes: [osdata:/usr/share/opensearch/data]
+networks:
+  edge: {}
+  backend: {}
+volumes:
+  pgdata: {}
+  osdata: {}

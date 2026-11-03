@@ -2,8 +2,8 @@
 " Bootstrap vim-plug if not installed
 " ------------------------------
 if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
@@ -156,11 +156,13 @@ nnoremap <leader>rr :call VrcQuery()<CR>
 " ------------------------------
 " QoL Shortcuts
 " ------------------------------
-nnoremap <leader>w :w<CR>            " Save
-nnoremap <leader>q :q<CR>            " Quit
-nnoremap <leader>x :x<CR>            " Save & quit
-nnoremap <leader>sv :source $MYVIMRC<CR> " Reload config
-nnoremap <leader>ev :vsplit $MYVIMRC<CR> " Edit config
+" Save / Quit / Save & quit
+nnoremap <leader>w :w<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>x :x<CR>
+" Reload / Edit config
+nnoremap <leader>sv :source $MYVIMRC<CR>
+nnoremap <leader>ev :vsplit $MYVIMRC<CR>
 
 " Move between splits easier
 nnoremap <C-h> <C-w>h

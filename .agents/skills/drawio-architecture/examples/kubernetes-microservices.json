@@ -1,0 +1,42 @@
+{
+  "title": "Shop: Kubernetes deployment",
+  "description": "The shop application as deployed on the prod-eu Kubernetes cluster. Shoppers come in through an Ingress in the edge namespace to the web Deployment, which calls the cart and orders Deployments over gRPC through their Services. Cart keeps state in a Redis StatefulSet and orders in a Postgres StatefulSet with a persistent volume claim, both in the data namespace. Orders calls an outside payment provider, is scaled by a HorizontalPodAutoscaler and takes its settings from a ConfigMap.",
+  "direction": "right",
+  "groups": [
+    { "id": "cluster", "label": "Cluster: prod-eu", "kind": "k8s.cluster" },
+    { "id": "ns_edge", "label": "Namespace: edge", "kind": "k8s.namespace", "parent": "cluster" },
+    { "id": "ns_shop", "label": "Namespace: shop", "kind": "k8s.namespace", "parent": "cluster" },
+    { "id": "ns_data", "label": "Namespace: data", "kind": "k8s.namespace", "parent": "cluster" }
+  ],
+  "nodes": [
+    { "id": "user", "label": "Shoppers", "kind": "actor" },
+    { "id": "ing", "label": "Ingress", "icon": "k8s.ingress", "parent": "ns_edge" },
+    { "id": "web_svc", "label": "Service: web", "icon": "k8s.service", "parent": "ns_shop" },
+    { "id": "web", "label": "Deployment: web (3)", "icon": "k8s.deployment", "parent": "ns_shop" },
+    { "id": "cart_svc", "label": "Service: cart", "icon": "k8s.service", "parent": "ns_shop" },
+    { "id": "cart", "label": "Deployment: cart (2)", "icon": "k8s.deployment", "parent": "ns_shop" },
+    { "id": "orders_svc", "label": "Service: orders", "icon": "k8s.service", "parent": "ns_shop" },
+    { "id": "orders", "label": "Deployment: orders (2)", "icon": "k8s.deployment", "parent": "ns_shop" },
+    { "id": "hpa", "label": "HPA: orders", "icon": "k8s.hpa", "parent": "ns_shop" },
+    { "id": "cfg", "label": "ConfigMap", "icon": "k8s.configmap", "parent": "ns_shop" },
+    { "id": "redis", "label": "StatefulSet: redis", "icon": "k8s.statefulset", "parent": "ns_data" },
+    { "id": "pg", "label": "StatefulSet: postgres", "icon": "k8s.statefulset", "parent": "ns_data" },
+    { "id": "pvc", "label": "PVC: pgdata", "icon": "k8s.pvc", "parent": "ns_data" },
+    { "id": "pay", "label": "Payment provider", "kind": "external" }
+  ],
+  "edges": [
+    { "from": "user", "to": "ing", "label": "HTTPS" },
+    { "from": "ing", "to": "web_svc" },
+    { "from": "web_svc", "to": "web" },
+    { "from": "web", "to": "cart_svc", "label": "gRPC" },
+    { "from": "web", "to": "orders_svc", "label": "gRPC" },
+    { "from": "cart_svc", "to": "cart" },
+    { "from": "orders_svc", "to": "orders" },
+    { "from": "cart", "to": "redis" },
+    { "from": "orders", "to": "pg" },
+    { "from": "pg", "to": "pvc" },
+    { "from": "orders", "to": "pay", "label": "REST" },
+    { "from": "hpa", "to": "orders", "label": "scales", "dashed": true },
+    { "from": "cfg", "to": "orders", "label": "env", "dashed": true }
+  ]
+}

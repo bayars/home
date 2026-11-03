@@ -1,0 +1,92 @@
+{
+  "skill_name": "drawio-architecture",
+  "evals": [
+    {
+      "id": 1,
+      "name": "aws-from-description",
+      "prompt": "Can you draw our production setup on AWS as a draw.io file? Two availability zones in eu-central-1. CloudFront in front, then an ALB, ECS Fargate services for the API in private subnets in both zones, Aurora PostgreSQL with the writer in zone a and a reader in zone b, ElastiCache Redis, an SQS queue that a Lambda consumes to send emails through SES, and everything logs to CloudWatch. Static assets are in S3.",
+      "expected_output": "The existing diagrams are looked at first (none match), then a new .drawio file, a PNG and the spec. Nested region > VPC > two zones side by side > subnets. Real AWS icons for every service named. The spec has a description of what the deployment does. The check reports no errors and no unexplained warnings.",
+      "files": [],
+      "assertions": [
+        "`scan` was run before anything was drawn",
+        "A .drawio file was produced and `check` exits with code 0",
+        "The .drawio file has a locked Background layer holding one white box, and `check` reports no `background` note and no `outside-backdrop` warning",
+        "Every service named in the prompt appears as a node with an AWS icon key that exists in the catalogue",
+        "The two availability zones are sibling groups inside a VPC group, each with a private subnet",
+        "The spec file is delivered alongside the diagram",
+        "The final message says the diagram was rendered and checked",
+        "`describe` on the result prints a description of several sentences that names the system and follows the request path; nothing of it is drawn on the diagram"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "compose-to-diagram",
+      "prompt": "heres our docker-compose.yml, could you turn it into an architecture diagram i can drop into the wiki? need to be able to edit it later in drawio",
+      "expected_output": "A diagram whose nodes are exactly the compose services, with edges from depends_on and connection settings, grouped by compose network. No credentials from the file appear in any label.",
+      "files": [
+        "evals/files/docker-compose.yml"
+      ],
+      "assertions": [
+        "Every service in the compose file appears exactly once as a node",
+        "No password, token or connection string from the compose file appears in the .drawio file",
+        "Edges match depends_on and the service URLs in the environment sections",
+        "The check exits with code 0",
+        "Anything inferred rather than read from the file is called out in the final message",
+        "The spec has a description that says what the system does, with no credentials in it"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "edit-existing-file",
+      "prompt": "I attached orders.drawio. Please add a Redis cache that the Order service reads from, put it in the Data group next to the database, and make sure nothing overlaps.",
+      "expected_output": "orders.drawio was built by this skill and has not been changed since, so it is updated through its stored spec: `spec` writes the spec out, one node and one edge are added, the description gains a sentence about the cache, and the diagram is rebuilt over the same file with a clean check. No second diagram is created.",
+      "files": [
+        "evals/files/orders.drawio"
+      ],
+      "assertions": [
+        "`describe` or `scan` was used to find out how the file should be updated before changing it",
+        "The spec was taken from the diagram with the `spec` command, not reconstructed by hand",
+        "Exactly one node (in the Data group) and one edge (from the Order service) were added to the spec; nothing else was changed",
+        "The description mentions the Redis cache after the update",
+        "The diagram was rebuilt to the same path; no `--overwrite` or `--force` was needed",
+        "`check` exits with code 0"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "dark-theme-fix",
+      "prompt": "i use drawio in dark mode and this diagram is basically unreadable for me, black text and black lines on a dark canvas. i tried putting a white box behind everything but it still goes dark. can you fix the file so it's always on white, also when i export it? dont move my stuff around",
+      "expected_output": "The same file with its hand-drawn box moved into a locked background layer and grown to cover the Cache box that stuck out, colours pinned so the dark theme no longer recolours it, nothing else moved, and a clean check. The reply explains in a sentence or two why the box alone did not work and how to resize it later.",
+      "files": [
+        "evals/files/dark-mode.drawio"
+      ],
+      "assertions": [
+        "The `backdrop` command was used rather than hand-typed coordinates or a rebuild from a spec",
+        "The output has exactly one background box (the original `bg`), now in a locked layer, and no second box was added",
+        "The page has adaptiveColors=\"none\" and a white background colour",
+        "Every other cell keeps its id, parent, geometry and style",
+        "`check` on the result exits with code 0 and reports no `background` note; `check --theme dark` gives the same result",
+        "The final message says how to resize the box by hand (View > Layers, unlock) or by rerunning the command"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "update-without-naming-the-file",
+      "prompt": "we moved the head office mail gateway out of the DMZ, mail now goes through a hosted provider on the internet. can you update the network diagram",
+      "expected_output": "No file is named. The scan finds three diagrams; the description of office-network.drawio identifies it as the one. Because someone moved shapes in it after it was built, it is edited as XML, keeping the manual layout: the mail gateway and its edge are removed from the DMZ, a hosted mail provider is added outside, the white background is refitted and the description is rewritten. The other two diagrams are untouched and no new diagram is created.",
+      "files": [
+        "evals/files/project/docs/office-network.drawio",
+        "evals/files/project/docs/orders.drawio",
+        "evals/files/project/docs/legacy-shop.drawio"
+      ],
+      "assertions": [
+        "`scan` was run on the project folder and office-network.drawio was chosen without asking which file",
+        "No new .drawio file was created; orders.drawio and legacy-shop.drawio are byte-identical to before",
+        "The file was edited as XML: `spec`/`build` were not forced with `--force` or `--overwrite`, and shapes that were not part of the change keep their positions",
+        "The mail gateway is gone from the DMZ and a hosted mail provider exists outside it, connected to the Internet side",
+        "`describe` shows a description that no longer says mail is handled in the DMZ",
+        "`check` on the result exits with code 0, with no `outside-backdrop` warning"
+      ]
+    }
+  ]
+}

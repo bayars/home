@@ -1,0 +1,41 @@
+{
+  "title": "Customer portal on Azure",
+  "description": "Customer portal in the production Azure subscription. Customers sign in with Microsoft Entra ID and reach the portal through Front Door and an Application Gateway with WAF. The web App Service calls the API App Service, which keeps data in SQL Database, caches in Redis, reads secrets from Key Vault and sends telemetry to Application Insights. Orders are published to Service Bus and processed by a Functions app that writes exports to a storage account. App services sit in the app subnet and data stores in the data subnet of one virtual network.",
+  "direction": "right",
+  "groups": [
+    { "id": "sub", "label": "Subscription: production", "kind": "azure.subscription" },
+    { "id": "rg", "label": "Resource group: rg-portal-prod", "kind": "azure.resource_group", "parent": "sub" },
+    { "id": "vnet", "label": "Virtual network 10.20.0.0/16", "kind": "azure.vnet", "parent": "rg" },
+    { "id": "snet_app", "label": "Subnet: app", "kind": "azure.subnet", "parent": "vnet" },
+    { "id": "snet_data", "label": "Subnet: data", "kind": "azure.subnet", "parent": "vnet" }
+  ],
+  "nodes": [
+    { "id": "users", "label": "Customers", "kind": "actor" },
+    { "id": "fd", "label": "Front Door", "icon": "azure.front_door", "parent": "sub" },
+    { "id": "agw", "label": "Application Gateway (WAF)", "icon": "azure.app_gateway", "parent": "vnet" },
+    { "id": "web", "label": "App Service: web", "icon": "azure.app_service", "parent": "snet_app" },
+    { "id": "api", "label": "App Service: API", "icon": "azure.app_service", "parent": "snet_app" },
+    { "id": "func", "label": "Functions: order jobs", "icon": "azure.functions", "parent": "snet_app" },
+    { "id": "sql", "label": "SQL Database", "icon": "azure.sql", "parent": "snet_data" },
+    { "id": "redis", "label": "Cache for Redis", "icon": "azure.redis", "parent": "snet_data" },
+    { "id": "bus", "label": "Service Bus", "icon": "azure.service_bus", "parent": "rg" },
+    { "id": "blob", "label": "Storage account", "icon": "azure.storage", "parent": "rg" },
+    { "id": "kv", "label": "Key Vault", "icon": "azure.key_vault", "parent": "rg" },
+    { "id": "ai", "label": "Application Insights", "icon": "azure.application_insights", "parent": "rg" },
+    { "id": "entra", "label": "Microsoft Entra ID", "icon": "azure.active_directory" }
+  ],
+  "edges": [
+    { "from": "users", "to": "fd", "label": "HTTPS" },
+    { "from": "users", "to": "entra", "label": "sign in", "dashed": true },
+    { "from": "fd", "to": "agw" },
+    { "from": "agw", "to": "web" },
+    { "from": "web", "to": "api", "label": "REST" },
+    { "from": "api", "to": "sql", "label": "SQL" },
+    { "from": "api", "to": "redis", "label": "cache" },
+    { "from": "api", "to": "bus", "label": "publish", "dashed": true },
+    { "from": "bus", "to": "func", "label": "trigger", "dashed": true, "layout": false },
+    { "from": "func", "to": "blob", "label": "exports" },
+    { "from": "api", "to": "kv", "label": "secrets", "dashed": true },
+    { "from": "api", "to": "ai", "label": "telemetry", "dashed": true }
+  ]
+}

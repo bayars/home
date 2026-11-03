@@ -1,0 +1,39 @@
+{
+  "title": "Order processing: services and data flow",
+  "description": "How an order moves through the order processing services; no infrastructure is shown. A customer uses the web app, which calls the Order service through the API gateway. The Order service checks stock with the Inventory service (backed by a Redis stock cache), charges through the Billing service and its payment provider, and stores the order in the Orders database. It then publishes an OrderPlaced event to a Kafka topic; the Notification worker consumes it and sends e-mail through an outside e-mail API. Solid lines are synchronous calls, dashed lines are asynchronous events.",
+  "direction": "right",
+  "groups": [
+    { "id": "edge", "label": "Edge", "kind": "group", "color": "green" },
+    { "id": "core", "label": "Core services", "kind": "group", "color": "blue" },
+    { "id": "data", "label": "Data", "kind": "group", "color": "yellow" },
+    { "id": "ext", "label": "Third parties", "kind": "boundary" }
+  ],
+  "nodes": [
+    { "id": "user", "label": "Customer", "kind": "actor" },
+    { "id": "web", "label": "Web app", "kind": "client", "tech": "Next.js", "parent": "edge" },
+    { "id": "gw", "label": "API gateway", "kind": "service", "tech": "Kong", "parent": "edge" },
+    { "id": "orders", "label": "Order service", "kind": "service", "tech": "Go", "desc": "Owns the order lifecycle.", "parent": "core" },
+    { "id": "inventory", "label": "Inventory service", "kind": "service", "tech": "Java", "parent": "core" },
+    { "id": "billing", "label": "Billing service", "kind": "service", "tech": "Python", "parent": "core" },
+    { "id": "notify", "label": "Notification worker", "kind": "service", "tech": "Node.js", "parent": "core" },
+    { "id": "events", "label": "order-events", "kind": "queue", "tech": "Kafka topic", "parent": "data" },
+    { "id": "pg", "label": "Orders DB", "kind": "database", "tech": "PostgreSQL", "parent": "data" },
+    { "id": "cache", "label": "Stock cache", "kind": "database", "tech": "Redis", "parent": "data", "color": "red" },
+    { "id": "psp", "label": "Payment provider", "kind": "external", "parent": "ext" },
+    { "id": "mailer", "label": "E-mail API", "kind": "external", "parent": "ext" },
+    { "id": "legend", "label": "Solid: synchronous call\nDashed: asynchronous event", "kind": "note" }
+  ],
+  "edges": [
+    { "from": "user", "to": "web" },
+    { "from": "web", "to": "gw", "label": "HTTPS" },
+    { "from": "gw", "to": "orders", "label": "REST" },
+    { "from": "orders", "to": "inventory", "label": "gRPC" },
+    { "from": "orders", "to": "billing", "label": "gRPC" },
+    { "from": "orders", "to": "pg" },
+    { "from": "inventory", "to": "cache" },
+    { "from": "billing", "to": "psp", "label": "charge" },
+    { "from": "orders", "to": "events", "label": "OrderPlaced", "dashed": true },
+    { "from": "events", "to": "notify", "label": "consume", "dashed": true },
+    { "from": "notify", "to": "mailer", "label": "send" }
+  ]
+}

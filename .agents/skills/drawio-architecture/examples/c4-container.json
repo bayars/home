@@ -1,0 +1,27 @@
+{
+  "title": "Internet banking: container view",
+  "description": "C4 container view of the Internet Banking System. A personal banking customer uses a single-page app or a mobile app to view balances and make payments. Both call one API application, which reads and writes its own PostgreSQL database, gets account data from the existing mainframe banking system over XML/HTTPS, and sends e-mail to the customer through the bank's e-mail system. The mainframe and the e-mail system are outside the system boundary.",
+  "direction": "down",
+  "groups": [
+    { "id": "bank", "label": "Internet Banking System", "kind": "c4.boundary" }
+  ],
+  "nodes": [
+    { "id": "customer", "label": "Personal Banking Customer", "kind": "c4.person", "desc": "A customer of the bank with personal accounts." },
+    { "id": "spa", "label": "Single-Page App", "kind": "c4.container", "tech": "TypeScript, React", "desc": "Gives customers all banking functions in their browser.", "parent": "bank" },
+    { "id": "mobile", "label": "Mobile App", "kind": "c4.container", "tech": "Kotlin, Swift", "desc": "A limited set of banking functions on a phone.", "parent": "bank" },
+    { "id": "api", "label": "API Application", "kind": "c4.container", "tech": "Java, Spring Boot", "desc": "Provides banking functions through a JSON/HTTPS API.", "parent": "bank" },
+    { "id": "db", "label": "Database", "kind": "c4.database", "tech": "PostgreSQL", "desc": "Stores users, hashed credentials and access logs.", "parent": "bank" },
+    { "id": "mainframe", "label": "Mainframe Banking System", "kind": "c4.external", "desc": "Holds the core banking records for customers and accounts." },
+    { "id": "email", "label": "E-mail System", "kind": "c4.external", "desc": "The internal Microsoft Exchange system." }
+  ],
+  "edges": [
+    { "from": "customer", "to": "spa", "label": "Views balances,\nmakes payments" },
+    { "from": "customer", "to": "mobile", "label": "Views balances,\nmakes payments" },
+    { "from": "spa", "to": "api", "label": "JSON/HTTPS" },
+    { "from": "mobile", "to": "api", "label": "JSON/HTTPS" },
+    { "from": "api", "to": "db", "label": "Reads and writes\n[SQL/TCP]" },
+    { "from": "api", "to": "mainframe", "label": "XML/HTTPS" },
+    { "from": "api", "to": "email", "label": "Sends e-mail\n[SMTP]" },
+    { "from": "email", "to": "customer", "label": "Sends e-mail to", "dashed": true }
+  ]
+}

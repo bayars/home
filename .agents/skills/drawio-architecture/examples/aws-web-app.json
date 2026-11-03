@@ -1,0 +1,47 @@
+{
+  "title": "Orders platform: AWS deployment",
+  "description": "Production deployment of the orders platform in one AWS region (eu-west-1) across two availability zones. Users resolve the site through Route 53 and reach CloudFront, which serves static assets from S3 and sends dynamic requests to an Application Load Balancer. The load balancer spreads requests over one app server per zone, each in a private subnet with outbound access through the NAT gateway of its zone's public subnet. Both app servers use the RDS primary in zone a, which replicates to a standby in zone b. Slow work is put on a job queue and handled by a worker that writes back to the database.",
+  "direction": "right",
+  "groups": [
+    { "id": "region", "label": "Region eu-west-1", "kind": "aws.region" },
+    { "id": "vpc", "label": "VPC 10.0.0.0/16", "kind": "aws.vpc", "parent": "region" },
+    { "id": "az1", "label": "Availability Zone a", "kind": "aws.az", "parent": "vpc" },
+    { "id": "az2", "label": "Availability Zone b", "kind": "aws.az", "parent": "vpc" },
+    { "id": "pub1", "label": "Public subnet", "kind": "aws.subnet_public", "parent": "az1" },
+    { "id": "priv1", "label": "Private subnet", "kind": "aws.subnet_private", "parent": "az1" },
+    { "id": "pub2", "label": "Public subnet", "kind": "aws.subnet_public", "parent": "az2" },
+    { "id": "priv2", "label": "Private subnet", "kind": "aws.subnet_private", "parent": "az2" }
+  ],
+  "nodes": [
+    { "id": "users", "label": "Users", "icon": "aws.users" },
+    { "id": "r53", "label": "Route 53", "icon": "aws.route_53" },
+    { "id": "cf", "label": "CloudFront", "icon": "aws.cloudfront" },
+    { "id": "s3", "label": "S3 static assets", "icon": "aws.s3" },
+    { "id": "alb", "label": "Application Load Balancer", "icon": "aws.alb", "parent": "vpc" },
+    { "id": "nat1", "label": "NAT gateway", "icon": "aws.nat_gateway", "parent": "pub1" },
+    { "id": "app1", "label": "App server", "icon": "aws.ec2", "parent": "priv1" },
+    { "id": "db1", "label": "RDS primary", "icon": "aws.rds", "parent": "priv1" },
+    { "id": "nat2", "label": "NAT gateway", "icon": "aws.nat_gateway", "parent": "pub2" },
+    { "id": "app2", "label": "App server", "icon": "aws.ec2", "parent": "priv2" },
+    { "id": "db2", "label": "RDS standby", "icon": "aws.rds", "parent": "priv2" },
+    { "id": "sqs", "label": "Job queue", "icon": "aws.sqs", "parent": "region" },
+    { "id": "worker", "label": "Worker", "icon": "aws.lambda", "parent": "region" }
+  ],
+  "edges": [
+    { "from": "users", "to": "r53", "label": "DNS" },
+    { "from": "users", "to": "cf", "label": "HTTPS" },
+    { "from": "cf", "to": "s3", "label": "static" },
+    { "from": "cf", "to": "alb", "label": "dynamic" },
+    { "from": "alb", "to": "app1" },
+    { "from": "alb", "to": "app2" },
+    { "from": "app1", "to": "db1", "label": "SQL" },
+    { "from": "app2", "to": "db1", "label": "SQL" },
+    { "from": "db1", "to": "db2", "label": "replication", "dashed": true },
+    { "from": "app1", "to": "sqs", "label": "enqueue", "dashed": true },
+    { "from": "app2", "to": "sqs", "label": "enqueue", "dashed": true },
+    { "from": "sqs", "to": "worker", "label": "trigger" },
+    { "from": "worker", "to": "db1", "label": "write" },
+    { "from": "app1", "to": "nat1", "label": "egress" },
+    { "from": "app2", "to": "nat2", "label": "egress" }
+  ]
+}

@@ -1,0 +1,51 @@
+<mxfile host="drawio-architecture-skill tests">
+  <diagram id="defects" name="Deliberate defects">
+    <mxGraphModel grid="1" gridSize="10" page="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="ok_icon" value="real icon" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#ED7100;strokeColor=#ffffff;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;" vertex="1" parent="1"><mxGeometry x="40" y="40" width="48" height="48" as="geometry"/></mxCell>
+        <mxCell id="bad_res" value="invented resIcon" style="sketch=0;fontColor=#232F3E;fillColor=#ED7100;strokeColor=#ffffff;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda_function_url;" vertex="1" parent="1"><mxGeometry x="200" y="40" width="48" height="48" as="geometry"/></mxCell>
+        <mxCell id="bad_shape" value="invented shape" style="html=1;fillColor=#ED7100;strokeColor=none;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.aws4.api_gateway_v2;" vertex="1" parent="1"><mxGeometry x="360" y="40" width="48" height="48" as="geometry"/></mxCell>
+        <mxCell id="bad_builtin" value="not a shape" style="shape=database;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="500" y="40" width="90" height="48" as="geometry"/></mxCell>
+        <mxCell id="bad_img" value="invented image" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=img/lib/azure2/compute/Azure_Functions_Premium.svg;" vertex="1" parent="1"><mxGeometry x="660" y="40" width="48" height="48" as="geometry"/></mxCell>
+        <mxCell id="bad_k8s" value="invented k8s icon" style="aspect=fixed;html=1;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#2875E2;strokeColor=#ffffff;shape=mxgraph.kubernetes.icon2;prIcon=pod_disruption_budget" vertex="1" parent="1"><mxGeometry x="820" y="40" width="50" height="48" as="geometry"/></mxCell>
+        <mxCell id="ext_img" value="remote image" style="shape=image;html=1;verticalLabelPosition=bottom;verticalAlign=top;image=https://example.com/logo.png;" vertex="1" parent="1"><mxGeometry x="980" y="40" width="48" height="48" as="geometry"/></mxCell>
+
+        <mxCell id="long1" value="A very long service name that will not fit in this box at all" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="40" y="180" width="90" height="40" as="geometry"/></mxCell>
+        <mxCell id="long2" value="NoWrapLabelThatIsWayTooLongForItsBox" style="rounded=1;html=1;" vertex="1" parent="1"><mxGeometry x="280" y="180" width="90" height="40" as="geometry"/></mxCell>
+        <mxCell id="raw_html" value="Line one&lt;br&gt;line two" style="rounded=1;whiteSpace=wrap;" vertex="1" parent="1"><mxGeometry x="520" y="180" width="140" height="40" as="geometry"/></mxCell>
+        <mxCell id="raw_nl" value="first\nsecond" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="700" y="180" width="140" height="40" as="geometry"/></mxCell>
+
+        <mxCell id="a" value="A" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="40" y="300" width="100" height="50" as="geometry"/></mxCell>
+        <mxCell id="mid" value="In the way" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;" vertex="1" parent="1"><mxGeometry x="220" y="300" width="100" height="50" as="geometry"/></mxCell>
+        <mxCell id="b" value="B" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="400" y="300" width="100" height="50" as="geometry"/></mxCell>
+        <mxCell id="through" value="" style="html=1;" edge="1" source="a" target="b" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="o1" value="Overlap 1" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="600" y="290" width="120" height="60" as="geometry"/></mxCell>
+        <mxCell id="o2" value="Overlap 2" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="660" y="320" width="120" height="60" as="geometry"/></mxCell>
+
+        <mxCell id="box" value="Subnet with a long title" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=8;fillColor=#f5f5f5;container=1;collapsible=0;" vertex="1" parent="1"><mxGeometry x="40" y="440" width="90" height="170" as="geometry"/></mxCell>
+        <mxCell id="spill" value="Sticks out" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="box"><mxGeometry x="40" y="60" width="100" height="40" as="geometry"/></mxCell>
+        <mxCell id="icon_in" value="Label wider than box" style="sketch=0;fontColor=#232F3E;fillColor=#ED7100;strokeColor=#ffffff;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;" vertex="1" parent="box"><mxGeometry x="20" y="110" width="40" height="40" as="geometry"/></mxCell>
+        <mxCell id="box2" value="Other group" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#dae8fc;container=1;collapsible=0;" vertex="1" parent="1"><mxGeometry x="300" y="440" width="220" height="150" as="geometry"/></mxCell>
+        <mxCell id="in2" value="Member" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="box2"><mxGeometry x="20" y="50" width="90" height="40" as="geometry"/></mxCell>
+        <mxCell id="stray" value="Not a member" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="470" y="500" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="box3" value="Crossing group" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;dashed=1;container=1;collapsible=0;" vertex="1" parent="1"><mxGeometry x="260" y="560" width="160" height="110" as="geometry"/></mxCell>
+        <mxCell id="in3" value="X" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="box3"><mxGeometry x="40" y="60" width="60" height="30" as="geometry"/></mxCell>
+        <mxCell id="wrong_parent" value="" style="html=1;" edge="1" source="in2" target="in3" parent="box2"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="p" value="P" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="700" y="440" width="80" height="40" as="geometry"/></mxCell>
+        <mxCell id="q" value="Q" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="700" y="600" width="80" height="40" as="geometry"/></mxCell>
+        <mxCell id="r" value="R" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="960" y="440" width="80" height="40" as="geometry"/></mxCell>
+        <mxCell id="s" value="S" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="960" y="600" width="80" height="40" as="geometry"/></mxCell>
+        <mxCell id="same1" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="p" target="s" parent="1"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="870" y="460"/><mxPoint x="870" y="620"/></Array></mxGeometry></mxCell>
+        <mxCell id="same2" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="q" target="r" parent="1"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="870" y="620"/><mxPoint x="870" y="460"/></Array></mxGeometry></mxCell>
+        <mxCell id="nowhere" value="" style="html=1;" edge="1" source="p" target="ghost" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="flat" value="" style="html=1;" edge="1" source="p" target="q" parent="1"/>
+        <mxCell id="t1" value="Wide label one" style="sketch=0;fontColor=#232F3E;fillColor=#7AA116;strokeColor=#ffffff;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" vertex="1" parent="1"><mxGeometry x="1100" y="300" width="40" height="40" as="geometry"/></mxCell>
+        <mxCell id="t2" value="Wide label two" style="sketch=0;fontColor=#232F3E;fillColor=#7AA116;strokeColor=#ffffff;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" vertex="1" parent="1"><mxGeometry x="1160" y="300" width="40" height="40" as="geometry"/></mxCell>
+        <mxCell id="t3" value="Under the label" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="1080" y="344" width="50" height="30" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

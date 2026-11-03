@@ -1,0 +1,40 @@
+{
+  "title": "Head office network",
+  "description": "Physical and logical network of the head office, top to bottom from the Internet. Traffic enters through the edge router and a firewall pair. The firewall publishes a reverse proxy (443) and a mail gateway (25) in the DMZ and passes internal traffic to the core switch. The internal LAN has two VLANs: a server VLAN with application servers, a database cluster and backup storage that receives nightly copies, and an office VLAN where an access switch serves workstations and the Wi-Fi access points used by laptops.",
+  "direction": "down",
+  "groups": [
+    { "id": "dmz", "label": "DMZ 172.16.0.0/24", "kind": "boundary", "color": "orange" },
+    { "id": "lan", "label": "Internal LAN 10.0.0.0/16", "kind": "group" },
+    { "id": "srv", "label": "Server VLAN 20", "kind": "boundary", "parent": "lan" },
+    { "id": "office", "label": "Office VLAN 10", "kind": "boundary", "parent": "lan" }
+  ],
+  "nodes": [
+    { "id": "internet", "label": "Internet", "kind": "cloud" },
+    { "id": "edge", "label": "Edge router", "icon": "cisco.router" },
+    { "id": "fw", "label": "Firewall pair", "icon": "cisco.firewall" },
+    { "id": "proxy", "label": "Reverse proxy", "icon": "net.server", "parent": "dmz" },
+    { "id": "mail", "label": "Mail gateway", "icon": "net.mail_server", "parent": "dmz" },
+    { "id": "core", "label": "Core switch", "icon": "cisco.l3_switch", "parent": "lan" },
+    { "id": "app", "label": "Application servers", "icon": "net.server", "parent": "srv" },
+    { "id": "dbs", "label": "Database cluster", "icon": "net.server_storage", "parent": "srv" },
+    { "id": "nas", "label": "Backup storage", "icon": "net.storage", "parent": "srv" },
+    { "id": "access", "label": "Access switch", "icon": "cisco.l2_switch", "parent": "office" },
+    { "id": "wifi", "label": "Wi-Fi access points", "icon": "cisco.wireless_access_point2", "parent": "office" },
+    { "id": "pcs", "label": "Workstations", "icon": "net.pc", "parent": "office" },
+    { "id": "laptops", "label": "Laptops", "icon": "net.laptop", "parent": "office" }
+  ],
+  "edges": [
+    { "from": "internet", "to": "edge", "arrow": "none" },
+    { "from": "edge", "to": "fw", "arrow": "none" },
+    { "from": "fw", "to": "proxy", "label": "443", "arrow": "none" },
+    { "from": "fw", "to": "mail", "label": "25", "arrow": "none" },
+    { "from": "fw", "to": "core", "arrow": "none" },
+    { "from": "core", "to": "app", "label": "trunk", "arrow": "none" },
+    { "from": "app", "to": "dbs", "arrow": "none" },
+    { "from": "dbs", "to": "nas", "label": "nightly", "dashed": true },
+    { "from": "core", "to": "access", "label": "trunk", "arrow": "none" },
+    { "from": "access", "to": "pcs", "arrow": "none" },
+    { "from": "access", "to": "wifi", "arrow": "none" },
+    { "from": "wifi", "to": "laptops", "dashed": true, "arrow": "none" }
+  ]
+}

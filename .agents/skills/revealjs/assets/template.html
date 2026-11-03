@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presentation title</title>
+
+  <!-- Pinned reveal.js version (5.2.1). Bump deliberately, never use @latest. -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.1/reset.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.1/reveal.min.css">
+  <!-- Base theme = starting point only; the <style> block below is what gives the deck its look. -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.1/theme/white.min.css" id="theme">
+  <!-- Code syntax theme (dark panel that reads well on a light slide). -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.1/plugin/highlight/monokai.min.css">
+  <!-- Community plugin styles (pinned): vertical-stack indicators + code copy button. -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js-verticator@1.3.1/plugin/verticator/verticator.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js-copycode@1.3.2/plugin/copycode/copycode.css">
+  <!-- Progressive-enhancement webfonts; deck still looks right with the system fallback. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+
+  <style>
+    :root {
+      --paper:  #EAEEF3;   /* cool porcelain deck background (not warm cream) */
+      --plate:  #FFFFFF;   /* raised surfaces: cards, code window */
+      --ink:    #14182B;   /* near-black indigo — primary text */
+      --ink-2:  #191E38;   /* cover background, lifted */
+      --muted:  #616C85;   /* secondary text */
+      --hair:   #E1E6EE;   /* hairline rules / borders */
+      --accent: #4B3FE4;   /* indigo — structure, links, markers */
+      --amber:  #F2A63C;   /* signature spark — used rarely */
+      --panel:  #12162A;   /* deep indigo-black behind code */
+      --font-display: "Space Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
+      --font-body:    "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    /* ---- Base canvas -------------------------------------------------- */
+    .reveal { font-family: var(--font-body); font-weight: 400; color: var(--ink); }
+    .reveal .slides { text-align: left; }
+    .reveal-viewport { background: var(--paper); }
+    section.stack { background: transparent; }
+    .reveal ::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+    .slide, .slide *, .cover, .cover * { box-sizing: border-box; }
+
+    /* ---- Slide scaffold: header / body / footer ----------------------- */
+    /* Pin every content slide to the full deck height so headers and footers
+       line up across the whole deck, and the 720px budget is enforced (a slide
+       can't grow past it and force a downscale). */
+    .reveal .slides > section,
+    .reveal .slides > section > section { height: 100%; }
+    /* .slide-body is height-capped and scrolls only as a LAST resort, so
+       content can never spill over the footer or off the slide. */
+    .slide { height: 100%; display: flex; flex-direction: column; padding: 8px 22px 4px; }
+    .slide-head { flex: 0 0 auto; margin-bottom: 0.45em; }
+    .slide-body {
+      flex: 1 1 auto; min-height: 0; overflow: auto; padding-right: 6px;
+    }
+    .slide-foot {
+      flex: 0 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 0.5em; padding-top: 0.5em;
+      border-top: 1px solid var(--hair);
+      color: var(--muted); font-family: var(--font-mono);
+      font-size: 0.4em; letter-spacing: 0.04em;
+    }
+    .slide-foot .coord { color: var(--accent); }
+
+    /* ---- Header eyebrow with amber registration tick (signature) ------ */
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 0.6em;
+      font-family: var(--font-mono); font-size: 0.4em; font-weight: 500;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent);
+      margin: 0 0 0.5em;
+    }
+    .eyebrow::before {
+      content: ""; width: 0.72em; height: 0.72em; flex: 0 0 auto;
+      background: var(--amber); border-radius: 2px;
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--amber) 22%, transparent);
+    }
+    .eyebrow .total { color: var(--muted); }
+
+    /* ---- Typography --------------------------------------------------- */
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: var(--font-display); color: var(--ink);
+      font-weight: 700; line-height: 1.06; letter-spacing: -0.02em;
+      text-transform: none; margin: 0;
+    }
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.44em; }
+    .reveal h3 { font-size: 1.0em; font-weight: 600; }
+    .slide-head h2::after {           /* short accent rule under section titles */
+      content: ""; display: block; width: 2.4em; height: 3px;
+      background: var(--accent); border-radius: 2px; margin-top: 0.35em;
+    }
+    .reveal p, .reveal li { line-height: 1.5; color: var(--ink); }
+    .reveal .muted { color: var(--muted); }
+    .reveal strong { color: var(--ink); font-weight: 650; }
+    .reveal a { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
+    .lead { font-size: 1.12em; color: var(--muted); max-width: 24em; }
+
+    /* Lists: consistent rhythm, aligned indigo markers */
+    .reveal ul, .reveal ol { margin: 0.2em 0 0; padding-left: 1.15em; }
+    .reveal li { margin: 0.45em 0; padding-left: 0.2em; }
+    .reveal ul li::marker { color: var(--accent); }
+
+    /* ---- Keycaps (on-theme: this deck is about arrow-key nav) --------- */
+    .keys { display: inline-flex; gap: 0.3em; }
+    .keycap {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 1.7em; height: 1.7em; padding: 0 0.5em;
+      font-family: var(--font-mono); font-size: 0.9em; color: var(--ink);
+      background: var(--plate); border: 1px solid var(--hair);
+      border-bottom-width: 3px; border-radius: 8px;
+    }
+
+    /* ---- Cards -------------------------------------------------------- */
+    .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1em; align-items: start; }
+    .card {
+      background: var(--plate); border: 1px solid var(--hair); border-radius: 14px;
+      padding: 0.85em 1em; box-shadow: 0 10px 26px -18px rgba(20,24,43,0.45);
+    }
+    .card h3 { margin-bottom: 0.35em; display: flex; align-items: center; gap: 0.5em; }
+    .metric { font-family: var(--font-display); font-size: 2.9em; font-weight: 700; color: var(--accent); letter-spacing: -0.03em; line-height: 1; }
+    .metric-label { font-size: 0.4em; color: var(--muted); letter-spacing: 0.04em; margin-top: 0.3em; }
+
+    /* ---- Code window: titlebar + dark panel --------------------------- */
+    .code-window {
+      border-radius: 12px; overflow: hidden; background: var(--panel);
+      box-shadow: 0 20px 44px -20px rgba(20,24,43,0.55);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .code-window .bar {
+      display: flex; align-items: center; gap: 0.5em;
+      padding: 0.5em 0.8em; background: #0C1020;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .code-window .dot { width: 0.62em; height: 0.62em; border-radius: 50%; }
+    .code-window .dot.r { background: #FF5F57; }
+    .code-window .dot.y { background: #F2A63C; }
+    .code-window .dot.g { background: #28C840; }
+    .code-window .file { margin-left: 0.5em; font-family: var(--font-mono); font-size: 0.4em; color: #8A93AD; letter-spacing: 0.03em; }
+    .reveal .code-window pre { width: 100%; margin: 0; box-shadow: none; font-size: 1em; }
+    .reveal .code-window pre code {
+      font-family: var(--font-mono); font-size: 0.5em; line-height: 1.5;
+      max-height: 470px; overflow: auto; padding: 0.9em 1.1em;
+      background: transparent; border-radius: 0; box-shadow: none;
+      -webkit-font-smoothing: auto;
+    }
+    .reveal code:not(pre code) {      /* inline code */
+      font-family: var(--font-mono); font-size: 0.82em;
+      background: color-mix(in srgb, var(--accent) 10%, #fff);
+      color: var(--accent); padding: 0.12em 0.42em; border-radius: 5px;
+    }
+    .reveal .hljs-ln-numbers { text-align: right; padding-right: 0.9em; color: #5b6480; }
+
+    /* ---- Mermaid: center + CAP the SVG so big diagrams scale down ------ */
+    .reveal .mermaid { display: flex; justify-content: center; margin: 0.2em 0; }
+    .reveal .mermaid svg { max-height: 430px; height: auto; width: auto; max-width: 100%; }
+
+    /* ---- Cover (full-bleed dark card; contrasts with light slides) ---- */
+    .cover { height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 0 4px; }
+    .cover .eyebrow { color: #B9C0FF; }
+    .cover h1 { color: #fff; font-size: 2.9em; max-width: 15em; letter-spacing: -0.03em; }
+    .cover .lead { color: rgba(255,255,255,0.72); max-width: 26em; margin-top: 0.7em; }
+    .cover .keycap { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.18); color: #fff; }
+    .cover .sig { margin-top: 1.4em; display: flex; align-items: center; gap: 0.6em; color: rgba(255,255,255,0.5); font-family: var(--font-mono); font-size: 0.4em; letter-spacing: 0.14em; text-transform: uppercase; }
+    .cover .sig .rule { flex: 1; height: 1px; background: rgba(255,255,255,0.16); max-width: 8em; }
+
+    /* ---- Reveal chrome: controls / progress / slide number ------------ */
+    .reveal .controls { color: var(--accent); }
+    .reveal .progress { color: var(--accent); height: 4px; }
+    .reveal .progress span { background: linear-gradient(90deg, var(--accent), var(--amber)); }
+    .reveal .slide-number { background: transparent; color: var(--muted); font-family: var(--font-mono); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal .slides section { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ============================================================
+           NAVIGATION MODEL (the "organized forwarding")
+           - Each top-level <section> = one TOPIC  -> move with left / right
+           - Nested <section>s inside  = that topic's DETAIL slides -> up / down
+           - Space / "next" snakes: down a topic's stack, then right.
+           ============================================================ -->
+
+      <!-- TOPIC 1 - cover: full-bleed dark card via data-background-color -->
+      <section data-background-color="#191E38">
+        <div class="cover">
+          <p class="eyebrow">Team / Q3 2026</p>
+          <h1>A deck that stays aligned and never overflows</h1>
+          <p class="lead">Move with <span class="keys"><span class="keycap">&larr;</span><span class="keycap">&rarr;</span></span> between topics and <span class="keys"><span class="keycap">&uarr;</span><span class="keycap">&darr;</span></span> to go deeper. Press <span class="keycap">S</span> for speaker notes.</p>
+          <div class="sig"><span class="rule"></span> reveal.js template</div>
+        </div>
+      </section>
+
+      <!-- TOPIC 2 - has vertical children (up/down drills in) -->
+      <section class="stack">
+        <section>
+          <div class="slide">
+            <div class="slide-head"><p class="eyebrow">Topic 02 <span class="total">/ 05</span></p><h2>How navigation is organized</h2></div>
+            <div class="slide-body">
+              <p class="lead">Horizontal moves between topics; vertical drills into one.</p>
+              <div class="columns" style="margin-top:0.5em;">
+                <div class="card">
+                  <h3><span class="keys"><span class="keycap">&larr;</span><span class="keycap">&rarr;</span></span> Topics</h3>
+                  <p class="muted">Step between top-level topics.</p>
+                </div>
+                <div class="card">
+                  <h3><span class="keys"><span class="keycap">&uarr;</span><span class="keycap">&darr;</span></span> Detail</h3>
+                  <p class="muted">Move within a topic's stack.</p>
+                </div>
+              </div>
+            </div>
+            <div class="slide-foot"><span>Navigation</span><span class="coord">press &darr; to drill in</span></div>
+          </div>
+        </section>
+        <section>
+          <div class="slide">
+            <div class="slide-head"><p class="eyebrow">Topic 02 &middot; detail</p><h2>Keep one idea per slide</h2></div>
+            <div class="slide-body">
+              <ul>
+                <li>Splitting long content into vertical slides is the primary overflow fix.</li>
+                <li>The body area is height-capped, so nothing bleeds onto the footer.</li>
+                <li><strong>Fragments</strong> reveal points one at a time <span class="fragment muted">&mdash; like this.</span></li>
+              </ul>
+            </div>
+            <div class="slide-foot"><span>Navigation</span><span class="coord">&rarr; for the next topic</span></div>
+          </div>
+        </section>
+      </section>
+
+      <!-- TOPIC 3 - code window that cannot overflow -->
+      <section>
+        <div class="slide">
+          <div class="slide-head"><p class="eyebrow">Topic 03 <span class="total">/ 05</span></p><h2>Code blocks that behave</h2></div>
+          <div class="slide-body">
+            <div class="code-window">
+              <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="file">deck.init.js</span></div>
+              <pre><code data-trim data-line-numbers="1|4-6|8-11" class="language-javascript">
+                Reveal.initialize({
+                  width: 1280, height: 720, margin: 0.045,
+                  center: false,               // top-align every slide
+                  navigationMode: 'default',   // arrows = organized grid
+                  controls: true, controlsLayout: 'edges',
+                  hash: true, slideNumber: 'c/t',
+                  plugins: [ RevealHighlight, RevealNotes ],
+                }).then(() => {
+                  console.log('Deck ready - use the arrow keys.');
+                });
+              </code></pre>
+            </div>
+          </div>
+          <div class="slide-foot"><span>Code</span><span class="coord">data-line-numbers steps with &rarr;</span></div>
+        </div>
+      </section>
+
+      <!-- TOPIC 4 - mermaid diagram (rendered from text, no image files) -->
+      <section>
+        <div class="slide">
+          <div class="slide-head"><p class="eyebrow">Topic 04 <span class="total">/ 05</span></p><h2>Diagrams from text</h2></div>
+          <div class="slide-body">
+            <!-- The plugin renders whatever is inside .mermaid > pre as an SVG. -->
+            <div class="mermaid"><pre>
+flowchart LR
+  A[Idea] --> B{Fits the slide?}
+  B -- Yes --> C[Ship it]
+  B -- No  --> D[Split vertically]
+  D --> B
+            </pre></div>
+          </div>
+          <div class="slide-foot"><span>Mermaid</span><span class="coord">edit the text, not an image</span></div>
+        </div>
+      </section>
+
+      <!-- TOPIC 5 - dense layout, still aligned -->
+      <section>
+        <div class="slide">
+          <div class="slide-head"><p class="eyebrow">Topic 05 <span class="total">/ 05</span></p><h2>Aligned layouts</h2></div>
+          <div class="slide-body">
+            <div class="columns">
+              <div>
+                <div class="metric">99.9%</div>
+                <div class="metric-label">STAYS ON THE SLIDE</div>
+                <p class="muted" style="margin-top:0.7em;">Grid plus a capped body height keeps every element inside the frame.</p>
+              </div>
+              <div class="card">
+                <h3>Checklist</h3>
+                <ul style="font-size:0.92em;">
+                  <li>One idea per slide</li>
+                  <li>Body height capped</li>
+                  <li>Code font sized down</li>
+                  <li>Verified by screenshot</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="slide-foot"><span>Layout</span><span class="coord">end of deck</span></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.1/reveal.min.js"></script>
+  <!-- Built-in plugins (bundled with reveal.js) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.1/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.1/plugin/notes/notes.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.1/plugin/markdown/markdown.min.js"></script>
+  <!-- Community plugins (pinned versions): Mermaid diagrams, vertical indicators, code copy button -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js-mermaid-plugin@11.15.0/plugin/mermaid/mermaid.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js-verticator@1.3.1/plugin/verticator/verticator.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js-copycode@1.3.2/plugin/copycode/copycode.js"></script>
+  <script>
+    Reveal.initialize({
+      width: 1280,
+      height: 720,
+      margin: 0.07,               // outer gutter so content never kisses the screen edge
+      minScale: 0.2,
+      maxScale: 1.5,
+      center: false,               // top-align -> consistent vertical alignment across slides
+      hash: true,
+      navigationMode: 'default',   // left/right between topics, up/down within a topic's stack
+      controls: true,
+      controlsLayout: 'edges',
+      controlsBackArrows: 'faded',
+      progress: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      transitionSpeed: 'default',
+
+      // ---- plugin options ----
+      mermaid: {                    // 'base' + themeVariables ties the diagram to the palette
+        theme: 'base',
+        themeVariables: {
+          primaryColor: '#EEF0FF', primaryBorderColor: '#4B3FE4',
+          primaryTextColor: '#14182B', lineColor: '#8A93AD',
+          fontFamily: 'Inter, system-ui, sans-serif',
+        },
+      },
+      verticator: { color: '#4B3FE4' }, // dots that show up/down depth in a vertical stack
+
+      plugins: [
+        RevealHighlight, RevealNotes, RevealMarkdown,  // built-in
+        RevealMermaid, Verticator, CopyCode,           // community (note the exact global names)
+      ],
+    });
+  </script>
+</body>
+</html>
